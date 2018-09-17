@@ -71,11 +71,6 @@ public class HomeController extends HttpServlet {
 		
 		try {
 			
-			
-			HttpSession session = request.getSession();
-			session.setAttribute("usuario", null );
-			
-			
 			//parametros
 			String id = request.getParameter("id");
 			String op = request.getParameter("op");
@@ -93,6 +88,26 @@ public class HomeController extends HttpServlet {
 			videoInicio = new Video();
 			if ( id != null && !OP_ELIMINAR.equals(op) ) {
 				videoInicio = dao.getById(id);
+
+				HttpSession session = request.getSession();
+				
+				//Si esta logueado
+				if (session.getAttribute("usuario") != null) {
+
+					ArrayList<Video> videos_vistos = (ArrayList<Video>) session.getAttribute("lista_videos");
+					if (videos_vistos != null) {
+						videos_vistos.add(videoInicio);
+
+					} else {
+						videos_vistos = new ArrayList<Video>() {
+							{
+								add(videoInicio);
+							}
+						};
+					}
+					session.setAttribute("lista_videos", videos_vistos);
+				}
+				
 			}else if ( !videos.isEmpty()) {
 				videoInicio = videos.get(0);
 			}

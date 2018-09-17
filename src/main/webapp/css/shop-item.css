@@ -8,6 +8,20 @@ body {
   padding-top: 54px;
 }
 
+div#add-video{
+	padding: 0 15px;
+}
+
+div#ladd-video img{
+    margin: 0 10px;
+}
+
+div#add-video p{
+	margin: auto;
+	color: #fff;
+}
+
+
 @media (min-width: 992px) {
   body {
     padding-top: 56px;

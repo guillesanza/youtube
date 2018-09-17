@@ -1,3 +1,4 @@
+<%@page import="com.ipartek.formacion.youtube.pojo.Usuario"%>
 <%@page import="com.ipartek.formacion.youtube.pojo.Alert"%>
 <%@page import="com.ipartek.formacion.youtube.pojo.Video"%>
 <%@page import="com.ipartek.formacion.youtube.controller.HomeController"%>
@@ -25,8 +26,8 @@
     <link href="https://blackrockdigital.github.io/startbootstrap-shop-item/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="https://blackrockdigital.github.io/startbootstrap-shop-item/css/shop-item.css" rel="stylesheet">
-
+    <link href="css/shop-item.css" rel="stylesheet">
+    
   </head>
 
   <body>
@@ -43,29 +44,40 @@
             <li class="nav-item active">
             
             <% 
-            	//Gestion Usuario Logeado            	
-            	if ( session.getAttribute("usuario") == null ){            
+            	//Gestion Usuario Logeado   
+            	Usuario usuario = (Usuario)session.getAttribute("usuario");
+            	if ( usuario == null ){            
             %>	            
               <!-- formulario Login -->
               <form action="login" method="post" class="form-inline mt-2 mt-md-0">
 	            <input name="usuario" class="form-control mr-sm-2" type="text" placeholder="Nombre Usuario" required pattern=".{3,30}">
 	            <input name="pass" class="form-control mr-sm-2" type="password" placeholder="Contraseña" required pattern=".{2,50}">
 	            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Entrar</button>
-	          </form>            
+	          </form>   
+	                
             <%
             	} else {
             %>              
               <!-- formulario Crear Video -->
-              <form action="" method="post" class="form-inline mt-2 mt-md-0">
-	            <input name="id" class="form-control mr-sm-2" type="text" placeholder="ID 11 caracerteres" title="11 caracteres" required pattern=".{11,11}">
-	            <input name="nombre" class="form-control mr-sm-2" type="text" placeholder="Nombre minimo 2 letras" required pattern=".{2,125}">
-	            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Añadir</button>
-	          </form>	          
+              <div id="add-video" class="d-flex flex-row align-items-center">
+	              <form action="" method="post" class="form-inline mt-2 mt-md-0">
+		            <input name="id" class="form-control mr-sm-2" type="text" placeholder="ID 11 caracerteres" title="11 caracteres" required pattern=".{11,11}">
+		            <input name="nombre" class="form-control mr-sm-2" type="text" placeholder="Nombre minimo 2 letras" required pattern=".{2,125}">
+		            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Añadir</button>
+		          </form>	
+	          
+            	  <img src="https://www.w3schools.com/tags/smiley.gif" alt="Smiley face" height="42" width="42">
+            	  <div class="d-flex flex-column">
+            		<p>NOmbre</p>
+            		<a href="logout">Logout</a>
+            	  </div>
+             </div>                  
 	          <%
             	} 
               %>  
 	          
-            </li>            
+            </li>
+               
           </ul>
           
           
@@ -80,6 +92,11 @@
       <%
       	//Gestion de Alertas para el usuario      	
         Alert alert = (Alert)request.getAttribute("alert");
+      	if ( alert == null ){
+      		alert = (Alert)session.getAttribute("alert");
+      		session.setAttribute("alert", null); // eliminar atributo de session
+      	}
+      
       	if( alert != null){
       	%>
       		<div class="container">
@@ -116,6 +133,25 @@
 	            <li class="list-group-item d-flex justify-content-between align-items-center">     
 	          	  	<a href="?id=<%=v.getId()%>"><%=v.getNombre()%></a>
 	          	  	<a href="?id=<%=v.getId()%>&op=<%=HomeController.OP_ELIMINAR%>"><i style="color:red;" class="float-right fas fa-trash-alt"></i></a>
+	            </li>
+            <%
+          		} //end for
+            %>
+            </ul>
+            
+          <h1 class="my-4">Videos Reproducidos</h1>
+          <ul class="list-group">
+          	<%
+          		ArrayList<Video> videos_vistos = (ArrayList<Video>) session.getAttribute("lista_videos");
+          		if ( videos_vistos == null ){
+          			videos_vistos = new ArrayList<Video>();
+          		}
+          		
+    			
+          		for( Video v : videos_vistos ){
+          	%>
+	            <li class="list-group-item d-flex justify-content-between align-items-center">     
+	          	  	<a href="?id=<%=v.getId()%>"><%=v.getNombre()%></a>
 	            </li>
             <%
           		} //end for
