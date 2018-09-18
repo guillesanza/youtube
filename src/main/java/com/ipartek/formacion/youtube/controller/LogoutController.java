@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ipartek.formacion.youtube.pojo.Alert;
+
 /**
  * Servlet implementation class logout
  */
@@ -39,18 +40,18 @@ public class LogoutController extends HttpServlet {
 	private void doProcess(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Alert alert = new Alert();
-		HttpSession session = request.getSession();
-
 		try {
-			session.invalidate();
-			session = null;
+			HttpSession session = request.getSession();
+			if (session != null) {
+				session.invalidate();
+				session = null;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			// request.getRequestDispatcher("home.jsp").forward(request, response);
-			response.sendRedirect(request.getContextPath() + "/");
+			response.sendRedirect(request.getContextPath() + "/inicio");
 		}
 
 	}

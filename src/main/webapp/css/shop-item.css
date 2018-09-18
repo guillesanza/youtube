@@ -21,6 +21,34 @@ div#add-video p{
 	color: #fff;
 }
 
+/* Error pages */
+div#error-page{
+	display: flex;
+    flex-flow: column nowrap;
+    max-width: 1024px;
+    margin: auto;
+
+}
+div#error-page.err404{
+	    background-color: #F1F7F7;
+}
+div#error-page.err500{
+	    background-color: #FAFAFA;
+}
+
+div#error-page h1{
+	text-align:center;
+	color: #fff;
+    background-color: #999;
+    padding: 20px 0;
+    margin: 0;
+}
+
+div#error-page img{
+	width: 500px;
+    margin: auto;
+    padding: 30px;
+}
 
 @media (min-width: 992px) {
   body {
