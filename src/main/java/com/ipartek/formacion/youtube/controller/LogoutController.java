@@ -23,23 +23,7 @@ public class LogoutController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doProcess(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doProcess(request, response);
-	}
-
-	private void doProcess(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+		
 		try {
 			HttpSession session = request.getSession();
 			if (session != null) {
@@ -53,7 +37,18 @@ public class LogoutController extends HttpServlet {
 			// request.getRequestDispatcher("home.jsp").forward(request, response);
 			response.sendRedirect(request.getContextPath() + "/inicio");
 		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
 
 	}
+
+
 
 }

@@ -1,6 +1,8 @@
 package com.ipartek.formacion.youtube.filter;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,14 +50,50 @@ public class FilterBackOffice implements Filter {
 			if (u != null) {
 				chain.doFilter(request, response);
 			} else {
+
+				// Usuario no logeado
+				informacionCliente(requestHttp);
 				responseHttp.sendRedirect(requestHttp.getContextPath() + "/inicio");
+				
 			}
-			// pass the request along the filter chain
-			chain.doFilter(request, response);
 
 		} catch (Exception e) {
 			responseHttp.sendRedirect(requestHttp.getContextPath() + "/inicio");
 		}
+
+	}
+
+	private void informacionCliente(HttpServletRequest req) {
+
+		System.out.println("-------------------------------------");
+		System.out.println("LOCAL");
+		System.out.println("Local host:" + req.getLocalAddr());
+		System.out.println("Local host:" + req.getLocalPort());
+		System.out.println("Local host:" + req.getLocalAddr());
+		System.out.println("Local host:" + req.getLocalName());
+		System.out.println();
+		System.out.println("Remote");
+		System.out.println("Remote host: " + req.getRemoteHost());
+		System.out.println("Remote addr: " + req.getRemoteAddr());
+		System.out.println("Remote port: " + req.getRemotePort());
+		System.out.println("Remote user: " + req.getRemoteUser());
+		System.out.println();
+		Enumeration<String> nombresCabeceras = req.getHeaderNames();
+		String nombre;
+		while (nombresCabeceras.hasMoreElements()) {
+			nombre = (String) nombresCabeceras.nextElement();
+			System.out.println(nombre + ":" + req.getHeader(nombre));
+		}
+
+		Map<String, String[]> parametros = req.getParameterMap();
+		for (Map.Entry<String, String[]> param : parametros.entrySet()) {
+			System.out.println(param.getKey() + ":");
+			for(String value : param.getValue()) {
+				System.out.println(value);
+			}
+		}
+
+		System.out.println("-------------------------------------");
 
 	}
 
