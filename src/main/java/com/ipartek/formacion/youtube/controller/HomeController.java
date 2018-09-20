@@ -1,11 +1,17 @@
 package com.ipartek.formacion.youtube.controller;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +56,17 @@ public class HomeController extends HttpServlet {
 
 		super.service(request, response); // llama a los metodos GET o POST
 
+		
+		//Cogemos la fecha actual
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MMM/ddd HH:mm:ss");
+		Cookie cVisita = new Cookie("cVisita", URLEncoder.encode(dateFormat.format(new Date()).toString(),"UTF-8"));
+		
+		cVisita.setMaxAge(60*60*24*365);
+		response.addCookie(cVisita);
+		
+		Cookie cookies[]=request.getCookies();
+		
+		
 		// despues de realizar GET o POST
 		request.setAttribute("videos", videos);
 		request.setAttribute("videoInicio", videoInicio);
@@ -120,7 +137,8 @@ public class HomeController extends HttpServlet {
 			// recoger parametros
 			String id = request.getParameter("id");
 			String nombre = request.getParameter("nombre");
-
+			
+			
 			// insertar
 			videoInicio = new Video(id, nombre);
 			dao.insert(videoInicio);

@@ -1,8 +1,12 @@
 package com.ipartek.formacion.youtube.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +56,14 @@ public class LoginController extends HttpServlet {
 				
 				//guardar Usuario en session
 				Usuario u = new Usuario(usuarioNombre, pass);
+				
+				Boolean guardarCoockie = (Boolean)("on".equals(request.getParameter("guardarUsuario")) ?true:false);
+				if(guardarCoockie) {
+					//CReamos y guardamos la cookie del usuario
+					Cookie nombreUsuario = new Cookie("nombreUsuario", u.getNombre());			
+					response.addCookie(nombreUsuario);
+					
+				}
 				
 				session.setAttribute("usuario", u);
 				session.setMaxInactiveInterval(60*5); // 5min

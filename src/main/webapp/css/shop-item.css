@@ -8,17 +8,36 @@ body {
   padding-top: 54px;
 }
 
+nav#menu>div:first-child>img:first-child{
+	/* imagen de youtube */
+	margin-right: 10px;
+}
+
 div#add-video{
 	padding: 0 15px;
 }
 
-div#ladd-video img{
+div#add-video img{
     margin: 0 10px;
 }
 
 div#add-video p{
-	margin: auto;
+	margin: auto 0;
 	color: #fff;
+}
+
+div#add-video a {
+	text-decoration: none;
+    color: #fff;
+}
+
+div#add-video a:hover{
+    color: #ccc;
+}
+
+.alert{
+	position: relative;
+    top: 20px;
 }
 
 /* Error pages */
@@ -52,6 +71,6 @@ div#error-page img{
 
 @media (min-width: 992px) {
   body {
-    padding-top: 56px;
+    padding-top: 85px;
   }
 }
