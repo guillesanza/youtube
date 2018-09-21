@@ -69,6 +69,18 @@ div#error-page img{
     padding: 30px;
 }
 
+
+nav ul.idioma{
+	padding: 0 10px;
+	flex-direction: column!important;
+	
+}
+
+nav ul.idioma li{
+	padding: 0 5px;
+	
+}
+
 @media (min-width: 992px) {
   body {
     padding-top: 85px;

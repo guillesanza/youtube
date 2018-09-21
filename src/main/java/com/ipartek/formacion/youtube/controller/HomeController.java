@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ipartek.formacion.youtube.model.VideoArrayListDAO;
+import com.ipartek.formacion.youtube.model.VideoDAO;
 import com.ipartek.formacion.youtube.pojo.Video;
 
 /**
@@ -29,7 +32,8 @@ public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final String OP_ELIMINAR = "1";
-	private static VideoArrayListDAO dao;
+	private static VideoArrayListDAO dao_old;
+	private static VideoDAO dao;
 	private ArrayList<Video> videos;
 	private Video videoInicio;
 
@@ -37,7 +41,8 @@ public class HomeController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		// Se ejecuta solo con la 1º petición, el resto de peticiones iran a "service"
-		dao = VideoArrayListDAO.getInstance();
+		dao = VideoDAO.getInstance();
+
 	}
 
 	@Override
@@ -54,18 +59,35 @@ public class HomeController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		super.service(request, response); // llama a los metodos GET o POST
-
-		
-		//Cogemos la fecha actual
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MMM/ddd HH:mm:ss");
-		Cookie cVisita = new Cookie("cVisita", URLEncoder.encode(dateFormat.format(new Date()).toString(),"UTF-8"));
-		
-		cVisita.setMaxAge(60*60*24*365);
-		response.addCookie(cVisita);
-		
-		Cookie cookies[]=request.getCookies();
-		
+		super.service(request, response); 
+		//idiomas
+		HttpSession session = request.getSession();
+		String idioma = request.getParameter("idioma");
+				
+		try {
+			
+			if ( idioma == null ) {				
+				idioma = (String)session.getAttribute("idioma");
+			}
+			
+			if ( idioma == null) {
+				//conseguir idioma del usuario a traves de la request
+				/*idioma = request.getLocale().toString();			
+				if ( idioma.length() != 5 ) {
+					idioma = "es_ES";		
+				}	*/
+				
+				idioma = "es_ES";
+			}
+		}catch (Exception e) {
+			idioma = "es_ES";
+		}finally {
+			//guardar en session
+			session.setAttribute("idioma", idioma);		
+		}	
+		//Locale locale = new Locale("en", "EN");
+		Locale locale = new Locale( idioma.split("_")[0] , idioma.split("_")[1] );			
+		ResourceBundle idiomas = ResourceBundle.getBundle("idiomas", locale );
 		
 		// despues de realizar GET o POST
 		request.setAttribute("videos", videos);
@@ -81,10 +103,10 @@ public class HomeController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-
 		
+		System.out.println("GET");
 		try {
-			
+
 			// parametros
 			String id = request.getParameter("id");
 			String op = request.getParameter("op");
@@ -118,7 +140,7 @@ public class HomeController extends HttpServlet {
 			} else if (!videos.isEmpty()) {
 				videoInicio = videos.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -137,8 +159,7 @@ public class HomeController extends HttpServlet {
 			// recoger parametros
 			String id = request.getParameter("id");
 			String nombre = request.getParameter("nombre");
-			
-			
+
 			// insertar
 			videoInicio = new Video(id, nombre);
 			dao.insert(videoInicio);
