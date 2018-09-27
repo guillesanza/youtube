@@ -3,39 +3,50 @@ package com.ipartek.formacion.youtube.pojo;
 public class Video {
 
 	public static final int ID_LONGITUD = 11;
-	
-	private String id;
+
+	private long id;
+	private String codigo;
 	private String nombre;
-	
-	public Video() {
+
+	public Video() throws Exception {
 		super();
-		this.id = "YlUKcNNmywk";
-		this.nombre = "Red Hot Chili Peppers - Californication";		
+		this.id = -1;
+		this.setCodigo("YlUKcNNmywk");
+		this.nombre = "Red Hot Chili Peppers - Californication";
 	}
-	
-	public Video(String id, String nombre) throws Exception {
+
+	public Video(String codigo, String nombre) throws Exception {
 		this();
-		this.setId(id);
+		this.setCodigo(codigo);
 		this.nombre = nombre;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) throws Exception {
-		if ( id != null && id.length() == ID_LONGITUD ) {
-			this.id = id;
-		}else {
-			throw new Exception("El ID debe ser exactamente de " + ID_LONGITUD + " caracteres");
-		}	
+
+	public void setId(long id) {
+		this.id = id;
 	}
+
+	public String getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(String cod) throws Exception {
+		if (cod != null && cod.length() == ID_LONGITUD) {
+			this.codigo = cod;
+		} else {
+			throw new Exception("El ID debe ser exactamente de " + ID_LONGITUD + " caracteres");
+		}
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
-	
-	
+
 }

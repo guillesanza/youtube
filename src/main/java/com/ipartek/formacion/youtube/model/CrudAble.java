@@ -22,15 +22,17 @@ public interface CrudAble<P> {
 	/**
 	 * Recupera todos los pojo
 	 * @return si no existe resultados retorna Lista vacia, no null
+	 * @throws Exception 
 	 */
-	List<P> getAll();
+	List<P> getAll() throws Exception;
 	
 	/**
 	 * Buscamos un pojo por su identificador
 	 * @param id
 	 * @return VideoYoutube si lo encuentra, null si no lo encuentra
+	 * @throws Exception 
 	 */
-	P getById(String id);
+	P getById(String id) throws Exception;
 	
 	//Upadte
 	boolean update(P pojo);

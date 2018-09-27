@@ -1,25 +1,18 @@
 package com.ipartek.formacion.youtube.controller;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ipartek.formacion.youtube.model.VideoArrayListDAO;
 import com.ipartek.formacion.youtube.model.VideoDAO;
 import com.ipartek.formacion.youtube.pojo.Video;
 
@@ -32,7 +25,7 @@ public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final String OP_ELIMINAR = "1";
-	private static VideoArrayListDAO dao_old;
+	//private static VideoArrayListDAO dao_old;
 	private static VideoDAO dao;
 	private ArrayList<Video> videos;
 	private Video videoInicio;
@@ -122,6 +115,7 @@ public class HomeController extends HttpServlet {
 			// video de inicio
 			videoInicio = new Video();
 			if (id != null && !OP_ELIMINAR.equals(op)) {
+				
 				videoInicio = dao.getById(id);
 
 				HttpSession session = request.getSession();
@@ -157,11 +151,11 @@ public class HomeController extends HttpServlet {
 		try {
 
 			// recoger parametros
-			String id = request.getParameter("id");
+			String codigo = request.getParameter("codigo");
 			String nombre = request.getParameter("nombre");
 
 			// insertar
-			videoInicio = new Video(id, nombre);
+			videoInicio = new Video(codigo, nombre);
 			dao.insert(videoInicio);
 
 			// pedir listado

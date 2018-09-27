@@ -7,8 +7,8 @@
 		</c:if>
 		<c:if test="${not empty alert}">
 			<div class="container">
-				<div class="alert ${alert.getTipo()} alert-dismissible fade show" role="alert">
-					<p>${alert.getTexto()}</p>
+				<div class="alert ${alert.tipo} alert-dismissible fade show" role="alert">
+					<p>${alert.texto}</p>
 					<button type="button" class="close" data-dismiss="alert"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -24,8 +24,8 @@
 				<ul class="list-group">
 					<c:forEach items="${videos}" var="v">
 						<li	class="list-group-item d-flex justify-content-between align-items-center">
-							<a href="inicio?id=${v.getId()}">${v.getNombre()}</a>
-							<a href="inicio?id=${v.getId()}%>&op=<${HomeController.OP_ELIMINAR}">
+							<a href="inicio?id=${v.id}">${v.nombre}</a>
+							<a href="inicio?id=${v.id}%>&op=<${HomeController.OP_ELIMINAR}">
 								<i style="color: red;" class="float-right fas fa-trash-alt"></i>
 							</a>
 						</li>
@@ -37,7 +37,7 @@
 					<c:if test="${not empty videosReproducidos}">
 						<c:forEach items="${videosReproducidos}" var="v">
 							<li class="list-group-item d-flex justify-content-between align-items-center">
-								<a href="inicio?id=${v.getId()}">${v.getNombre()}</a>
+								<a href="inicio?id=${v.id}">${v.nombre}</a>
 							</li>
 						</c:forEach>
 					</c:if>
@@ -51,9 +51,9 @@
 			<!-- /.col-lg-3 -->
 			<div class="col-lg-9">
 				<div class="card mt-4">
-					<iframe id="iframe" width="823" height="415" src="https://www.youtube.com/embed/${videoInicio.getId()}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					<iframe id="iframe" width="823" height="415" src="https://www.youtube.com/embed/${videoInicio.codigo}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 					<div class="card-body">
-						<h3 class="card-title"><${videoInicio.getNombre()}></h3>
+						<h3 class="card-title"><${videoInicio.nombre}></h3>
 						<p class="card-text">Lorem ipsum dolor sit amet, consectetur
 							adipisicing elit. Sapiente dicta fugit fugiat hic aliquam itaque
 							facere, soluta. Totam id dolores, sint aperiam sequi pariatur
