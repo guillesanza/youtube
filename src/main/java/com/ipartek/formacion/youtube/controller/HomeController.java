@@ -87,13 +87,14 @@ public class HomeController extends HttpServlet {
 		// despues de realizar GET o POST
 		request.setAttribute("videos", videos);
 		request.setAttribute("videoInicio", videoInicio);
-		
+
 		String playList = "";
-		for (Video video : videos) {
-			playList+=video.getCodigo()+",";
-		}		
+		for (int i = 1; i < videos.size(); i++) {
+			playList += videos.get(i).getCodigo() + ",";
+		}
+
 		request.setAttribute("playList", playList);
-		
+
 		request.getRequestDispatcher("view/home.jsp").forward(request, response);
 
 	}
@@ -106,7 +107,7 @@ public class HomeController extends HttpServlet {
 			throws ServletException, IOException {
 
 		Alert alert = null;
-		
+
 		try {
 
 			// parametros
@@ -117,7 +118,7 @@ public class HomeController extends HttpServlet {
 			if (op != null && OP_ELIMINAR.equals(op)) {
 				if (dao.delete(id)) {
 					alert = new Alert(Alert.SUCCESS, "Video Eliminado correctamente");
-				
+
 				} else {
 					alert = new Alert();
 
@@ -168,17 +169,27 @@ public class HomeController extends HttpServlet {
 		Alert alert = null;
 		try {
 
+			String op = request.getParameter("op");
+			String id = request.getParameter("id");
+
 			// recoger parametros
 			String codigo = request.getParameter("codigo");
 			String nombre = request.getParameter("nombre");
 
-			// insertar
-			videoInicio = new Video(codigo, nombre);
-			if (dao.insert(videoInicio)) {
-				alert = new Alert(Alert.SUCCESS, "Gracias por subir tu vídeo");
+			if (op != null && OP_MODIFICAR.equals(op)) {
+
+				Video v = dao.getById(id);
+				v.setNombre(nombre);
+				
 			} else {
-				alert = new Alert(Alert.WARNING,
-						"Error, no se pudo crear el vídeo, por favor asegurese de que no está duplicado el vídeo");
+				// insertar
+				videoInicio = new Video(codigo, nombre);
+				if (dao.insert(videoInicio)) {
+					alert = new Alert(Alert.SUCCESS, "Gracias por subir tu vídeo");
+				} else {
+					alert = new Alert(Alert.WARNING, "Error, no se pudo crear el vídeo, por favor asegurese de que no está duplicado el vídeo");
+
+				}
 
 			}
 

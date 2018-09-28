@@ -32,7 +32,7 @@
 			        playerVars: {
 			            color: 'white',
 			            playlist: '${playList}',
-			            autoplay: 1
+			            autoplay: true
 			        },
 			        events: {
 			            onReady: initialize

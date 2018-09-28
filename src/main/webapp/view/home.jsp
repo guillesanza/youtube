@@ -26,10 +26,7 @@
 							<c:if test="${not empty sessionScope.usuario}">
 								<div class="options">
 									<i onclick="showModalEliminar(${v.id},${HomeController.OP_ELIMINAR})" style="color: red;" class="float-right fas fa-trash-alt"></i>
-									<a href="inicio?id=${v.id}&op=${HomeController.OP_MODIFICAR}">
-										<i class="fas fa-pencil-alt"></i>
-									</a>
-									
+									<i onclick="showModalModificar('${v.id}','${v.nombre}')" class="fas fa-pencil-alt"></i>
 								</div>
 							</c:if>
 						</li>
@@ -69,8 +66,11 @@
 				        </button>
 				      </div>
 				      <div class="modal-body">
-				      <form action="inicio" method="post"></form>
-				        <input type="text" class="form-control" name="nombreEdit" placeholder="Nombre del video">
+					      <form action="inicio" method="post">
+					      	<input type="hidden" class="form-control" name="id" value="-1">
+					      	<input type="hidden" class="form-control" name="op" value="${HomeController.OP_MODIFICAR }">
+					        <input type="text" class="form-control" name="nombreEdit" placeholder="Nombre del video">
+					      </form>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -100,7 +100,9 @@
 			<!-- /.col-lg-3 -->
 			<div class="col-lg-9">
 				<div class="card mt-4">
-					<iframe id="iframe" width="823" height="415" src="https://www.youtube.com/embed/${videoInicio.codigo}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					<!-- Video -->
+					<div id="video-placeholder"></div>
+					<!--iframe id="iframe" width="823" height="415" src="https://www.youtube.com/embed/${videoInicio.codigo}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe-->
 					<div class="card-body">
 						<h3 class="card-title"><${videoInicio.nombre}></h3>
 						<p class="card-text">Lorem ipsum dolor sit amet, consectetur
@@ -133,9 +135,7 @@
 						<small class="text-muted">Posted by Anonymous on 3/1/17</small>
 					</div>
 				</div>
-				<!-- Video -->
-				<h3>VIDEO API</h3>
-				<div id="video-placeholder"></div>
+				
 				<!-- /.card -->
 			</div>
 			<!-- /.col-lg-9 -->
