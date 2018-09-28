@@ -3,6 +3,7 @@ package com.ipartek.formacion.youtube.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +13,11 @@ public class VideoDAO implements CrudAble<Video> {
 
 	private static VideoDAO INSTANCE = null;
 
-	private final String SQL_GET_ALL = "SELECT id, nombre, codigo FROM video limit 1000;";
-	private final String SQL_GET_BY_ID = "SELECT id, nombre, codigo  FROM video WHERE id = ?;";
-	private final String SQL_UPDATE = "UPDATE video SET nombre=?, codigo=? WHERE id = ?;";
-	private final String SQL_INSERT = "INSERT INTO video (nombre, codigo) VALUES (?,?);";
-	private final String SQL_DELETE ="DELETE FROM video WHERE id=?;";
+	private final String SQL_GET_ALL = "SELECT id, codigo, nombre FROM video limit 1000;";
+	private final String SQL_GET_BY_ID = "SELECT id, codigo, nombre  FROM video WHERE id = ?;";
+	private final String SQL_UPDATE = "UPDATE video SET codigo=?, nombre=? WHERE id = ?;";
+	private final String SQL_INSERT = "INSERT INTO video (codigo, nombre) VALUES (?,?);";
+	private final String SQL_DELETE = "DELETE FROM video WHERE id=?;";
 
 	private VideoDAO() {
 		super();
@@ -34,14 +35,28 @@ public class VideoDAO implements CrudAble<Video> {
 
 		boolean result = false;
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
+				PreparedStatement ps = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
 
 			ps.setString(1, pojo.getCodigo());
 			ps.setString(2, pojo.getNombre());
 
+
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows == 1) {
-				result = true;
+				
+				// Conseguir ID generado
+				try (ResultSet rs = ps.getGeneratedKeys();) {
+					
+					while (rs.next()) {
+						pojo.setId(rs.getLong(1));
+						result = true;
+					}
+					
+				} catch (Exception e) {
+					e.getStackTrace();
+					
+				}
+
 			}
 
 		} catch (Exception e) {
@@ -123,8 +138,7 @@ public class VideoDAO implements CrudAble<Video> {
 
 			ps.setString(1, id);
 
-			int affectedRows = ps.executeUpdate();
-			if (affectedRows == 1) {
+			if (ps.executeUpdate() == 1) {
 				result = true;
 			}
 

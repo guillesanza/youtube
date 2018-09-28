@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ipartek.formacion.youtube.model.VideoDAO;
+import com.ipartek.formacion.youtube.pojo.Alert;
 import com.ipartek.formacion.youtube.pojo.Video;
 
 /**
@@ -25,7 +26,8 @@ public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final String OP_ELIMINAR = "1";
-	//private static VideoArrayListDAO dao_old;
+	public static final String OP_MODIFICAR = "2";
+	// private static VideoArrayListDAO dao_old;
 	private static VideoDAO dao;
 	private ArrayList<Video> videos;
 	private Video videoInicio;
@@ -52,39 +54,46 @@ public class HomeController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		super.service(request, response); 
-		//idiomas
+		super.service(request, response);
+		// idiomas
 		HttpSession session = request.getSession();
 		String idioma = request.getParameter("idioma");
-				
+
 		try {
-			
-			if ( idioma == null ) {				
-				idioma = (String)session.getAttribute("idioma");
+
+			if (idioma == null) {
+				idioma = (String) session.getAttribute("idioma");
 			}
-			
-			if ( idioma == null) {
-				//conseguir idioma del usuario a traves de la request
-				/*idioma = request.getLocale().toString();			
-				if ( idioma.length() != 5 ) {
-					idioma = "es_ES";		
-				}	*/
-				
+
+			if (idioma == null) {
+				// conseguir idioma del usuario a traves de la request
+				/*
+				 * idioma = request.getLocale().toString(); if ( idioma.length() != 5 ) { idioma
+				 * = "es_ES"; }
+				 */
+
 				idioma = "es_ES";
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			idioma = "es_ES";
-		}finally {
-			//guardar en session
-			session.setAttribute("idioma", idioma);		
-		}	
-		//Locale locale = new Locale("en", "EN");
-		Locale locale = new Locale( idioma.split("_")[0] , idioma.split("_")[1] );			
-		ResourceBundle idiomas = ResourceBundle.getBundle("idiomas", locale );
-		
+		} finally {
+			// guardar en session
+			session.setAttribute("idioma", idioma);
+		}
+		// Locale locale = new Locale("en", "EN");
+		Locale locale = new Locale(idioma.split("_")[0], idioma.split("_")[1]);
+		ResourceBundle idiomas = ResourceBundle.getBundle("idiomas", locale);
+
 		// despues de realizar GET o POST
 		request.setAttribute("videos", videos);
 		request.setAttribute("videoInicio", videoInicio);
+		
+		String playList = "";
+		for (Video video : videos) {
+			playList+=video.getCodigo()+",";
+		}		
+		request.setAttribute("playList", playList);
+		
 		request.getRequestDispatcher("view/home.jsp").forward(request, response);
 
 	}
@@ -96,8 +105,8 @@ public class HomeController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		Alert alert = null;
 		
-		System.out.println("GET");
 		try {
 
 			// parametros
@@ -106,7 +115,13 @@ public class HomeController extends HttpServlet {
 
 			// eliminar ?
 			if (op != null && OP_ELIMINAR.equals(op)) {
-				dao.delete(id);
+				if (dao.delete(id)) {
+					alert = new Alert(Alert.SUCCESS, "Video Eliminado correctamente");
+				
+				} else {
+					alert = new Alert();
+
+				}
 			}
 
 			// listado videos
@@ -115,7 +130,7 @@ public class HomeController extends HttpServlet {
 			// video de inicio
 			videoInicio = new Video();
 			if (id != null && !OP_ELIMINAR.equals(op)) {
-				
+
 				videoInicio = dao.getById(id);
 
 				HttpSession session = request.getSession();
@@ -137,6 +152,7 @@ public class HomeController extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			alert = new Alert();
 		} finally {
 
 		}
@@ -148,6 +164,8 @@ public class HomeController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		Alert alert = null;
 		try {
 
 			// recoger parametros
@@ -156,14 +174,22 @@ public class HomeController extends HttpServlet {
 
 			// insertar
 			videoInicio = new Video(codigo, nombre);
-			dao.insert(videoInicio);
+			if (dao.insert(videoInicio)) {
+				alert = new Alert(Alert.SUCCESS, "Gracias por subir tu vídeo");
+			} else {
+				alert = new Alert(Alert.WARNING,
+						"Error, no se pudo crear el vídeo, por favor asegurese de que no está duplicado el vídeo");
+
+			}
 
 			// pedir listado
 			videos = (ArrayList<Video>) dao.getAll();
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			alert = new Alert();
 		} finally {
+			request.setAttribute("alert", alert);
 
 		}
 	}

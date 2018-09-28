@@ -19,19 +19,67 @@
 		<div class="row">
 			<div class="col-lg-3">
 				<h4 class="my-4 text-center"><fmt:message key="lista.reproduccion" /></h4>
-				
-				
 				<ul class="list-group">
 					<c:forEach items="${videos}" var="v">
 						<li	class="list-group-item d-flex justify-content-between align-items-center">
 							<a href="inicio?id=${v.id}">${v.nombre}</a>
-							<a href="inicio?id=${v.id}%>&op=<${HomeController.OP_ELIMINAR}">
-								<i style="color: red;" class="float-right fas fa-trash-alt"></i>
-							</a>
+							<c:if test="${not empty sessionScope.usuario}">
+								<div class="options">
+									<i onclick="showModalEliminar(${v.id},${HomeController.OP_ELIMINAR})" style="color: red;" class="float-right fas fa-trash-alt"></i>
+									<a href="inicio?id=${v.id}&op=${HomeController.OP_MODIFICAR}">
+										<i class="fas fa-pencil-alt"></i>
+									</a>
+									
+								</div>
+							</c:if>
 						</li>
 					</c:forEach>
-					
 				</ul>
+
+				<!-- Modal ELIMAR-->
+				<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLabel">Atención!!</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        ¿Estás seguro de querer eliminar el video?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				        <a id="btnEliminar" href="#" class="btn btn-danger">Eliminar</a>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
+				
+				<!-- Modal MoDIFICAR -->
+				<div class="modal fade" id="modalModificar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalCenterTitle">Modificar video</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				      <form action="inicio" method="post"></form>
+				        <input type="text" class="form-control" name="nombreEdit" placeholder="Nombre del video">
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				        <button type="submit" class="btn btn-primary">Guardar</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
 				<h4 class="my-4 text-center">Videos Reproducidos</h4>
 				<ul class="list-group">
 					<c:if test="${not empty videosReproducidos}">
@@ -47,6 +95,7 @@
 						</li>
 					</c:if>
 				</ul>
+				
 			</div>
 			<!-- /.col-lg-3 -->
 			<div class="col-lg-9">
@@ -84,6 +133,9 @@
 						<small class="text-muted">Posted by Anonymous on 3/1/17</small>
 					</div>
 				</div>
+				<!-- Video -->
+				<h3>VIDEO API</h3>
+				<div id="video-placeholder"></div>
 				<!-- /.card -->
 			</div>
 			<!-- /.col-lg-9 -->

@@ -37,9 +37,10 @@
 						<c:if test="${not empty sessionScope.usuario}">
 							<div id="add-video" class="d-flex flex-row align-items-center">
 								<form action="" method="post" class="d-flex flex-row mt-2 mt-md-0">
-									<input name="id" class="form-control mr-sm-2" type="text"
+									<input name="codigo" class="form-control mr-sm-2" type="text"
 										placeholder="ID 11 caracerteres" title="11 caracteres" required
-										pattern=".{11,11}"> <input name="nombre"
+										pattern=".{11,11}">
+									<input name="nombre"
 										class="form-control mr-sm-2" type="text"
 										placeholder="Nombre minimo 2 letras" required
 										pattern=".{2,125}">
