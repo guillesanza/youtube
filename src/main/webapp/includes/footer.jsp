@@ -27,15 +27,17 @@
 			function onYouTubeIframeAPIReady( ) {
 			    player = new YT.Player('video-placeholder', {
 			        width: 600,
-			        height: 400,
+			        height: 450,
 			        videoId: '${videoInicio.codigo}',
 			        playerVars: {
 			            color: 'white',
-			            playlist: '${playList}'
+			            playlist: '${playList}',
+			            autoplay: 1
 			        },
 			        events: {
 			            onReady: initialize
-			        }
+			        },
+			        
 			    });
 			}
 	
@@ -46,7 +48,7 @@
 			    updateProgressBar();
 			    
 			    // Clear any old interval.
-			    clearInterval(time_update_interval);
+			    clearInterval(10000);
 	
 			    // Start interval to update elapsed time display and
 			    // the elapsed part of the progress bar every second.
@@ -117,9 +119,10 @@
 			$("#btnEliminar").attr("href", "inicio?id="+id+"&op="+op);
 		}
 		
-		function showModalModificar(id,op){
+		function showModalModificar(id, nombre){
 			$("#modalModificar").modal("show");
 			$("#btnEliminar").attr("href", "inicio");
+			$("input[name='nombreEdit']").val(nombre);
 		}
 		
 		
